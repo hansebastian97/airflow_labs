@@ -5,7 +5,8 @@ x-airflow-common:
   environment:
     &airflow-common-env
     AIRFLOW__CORE__EXECUTOR: LocalExecutor
-    AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@postgres/airflow
+    # AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@postgres/airflow
+    AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: mysql+mysqldb://airflow:airflow@mysql/airflow
     AIRFLOW__CORE__FERNET_KEY: ''
     AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION: 'true'
     AIRFLOW__CORE__LOAD_EXAMPLES: 'false'
@@ -38,6 +39,21 @@ services:
       retries: 5
       start_period: 5s
     restart: always
+
+  mysql:
+    image: sakiladb/mysql:latest
+    ports:
+      - 3307:3306
+    restart: always
+    command: --explicit-defaults-for-timestamp=1
+    environment:
+      MYSQL_ROOT_PASSWORD: "${MYSQL_ROOT_PASSWORD}"
+      MYSQL_USER: "${MYSQL_USER}"
+      MYSQL_PASSWORD: "${MYSQL_PASSWORD}"      
+      MYSQL_DATABASE: "${MYSQL_DATABASE}"
+    volumes:
+      - mysql-db-volume:/var/lib/mysql/data
+
 
 
   airflow-webserver:
@@ -152,3 +168,4 @@ services:
 
 volumes:
   postgres-db-volume:
+  mysql-db-volume:
