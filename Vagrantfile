@@ -18,6 +18,7 @@ Vagrant.configure("2") do |config|
       vb.customize ["modifyvm", :id, "--uart1", "0x3F8", "4"]
       vb.customize ["modifyvm", :id, "--uartmode1", "file", File::NULL]
     end
+    controlnode.vm.provision "shell", path: ".\\vagrant_folder\\docker.sh"
   end
 end  
   
